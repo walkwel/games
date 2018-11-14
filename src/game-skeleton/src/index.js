@@ -8,7 +8,7 @@ const App = () => {
     levelsToWin: 3,
     gameTime:  200,
     botsQuantities: 1,
-    gameType: 'game',
+    gameType: 'tournament',
     scoreToWin: 20,
     tournamentScoreToWin:  3,
     singleWindowGame: true,
