@@ -21,7 +21,8 @@ const App = () => {
       id: 1,
       name: 'Easy Bot',
       score: 0,
-      character: 'WhiteCar'
+      character: 'WhiteCar',
+      isBot : true
     }]
   }
 
