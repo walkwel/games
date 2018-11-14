@@ -6,27 +6,30 @@ import {PLAY, NOT_STARTED, PAUSED, GAME_OVER} from '../constants'
 import config from '../config';
 import GameWindow from './gameWindow';
 import WinningScreen from './WinningScreen';
+import { observer } from 'mobx-react';
 
-export default class App extends Component {
-  constructor () {
-    super()
+class GameView extends Component {
+  constructor (props) {
+    super(props)
     this.state = {
       gameState: NOT_STARTED,
       gameOver: {
         status: true,
-        winner: null,
         message: 'Time Over'
       }
     }
+  }
+  componentDidMount () {
+    this.props.store.players = this.props.gameData.players;
+    this.props.store.resetGame();
+    this.props.store.time = this.props.gameData.gameTime || config.time;
   }
 
   // end game
   endGame = (gameState = NOT_STARTED) => {
     this.setState(() => ({gameState}));
     this.props.store.resetGame();
-    this.props.store.score = [0, 0];
     this.props.store.time = this.props.gameData.gameTime || config.time;
-    this.props.store.mode = gameState;
   }
   // start game
   startGame = (gameState = NOT_STARTED) => {
@@ -45,6 +48,7 @@ export default class App extends Component {
   // Submit Solution
   submitSolution = (gameState = NOT_STARTED) => {
     this.setState(() => ({gameState}));
+    this.endGame(gameState)
   }
 
   render() {
@@ -69,7 +73,8 @@ export default class App extends Component {
           : gameState === GAME_OVER ? (
             <WinningScreen
               gameOver={gameOver}
-              restartGame={this.updateState}
+              winner={this.props.store.winner}
+              restartGame={this.endGame}
               submitSolution={this.submitSolution}
             /> )
           : (
@@ -91,3 +96,5 @@ export default class App extends Component {
       </Fragment>
   )}
 }
+
+export default observer(GameView)

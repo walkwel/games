@@ -6,13 +6,15 @@ import { NOT_STARTED } from '../constants';
 import PropTypes from 'prop-types';
 
 
-const WinningScreen = ({ restartGame, gameOver, submitSolution }) => {
+const WinningScreen = ({ restartGame, gameOver, winner, submitSolution }) => {
   return (
     <Fragment>
       {gameOver.status && (
         <div className={"result-display"}>
           <Typography variant="headline">
             {gameOver.message}
+            <br />
+            {winner.name} wins the game!
           </Typography>
           <Button
             variant="contained"

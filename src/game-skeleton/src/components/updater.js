@@ -29,7 +29,7 @@ class Updater extends React.Component {
     if (this.props.store.mode === PLAY) {
       if(this.props.store.time <= 0) {
         this.props.updateGameState(GAME_OVER);
-        this.props.store.updateMode(GAME_OVER);
+        this.props.store.endGame();
         return;
       }
       // update game time
@@ -107,7 +107,7 @@ class Updater extends React.Component {
         }
           break;
       }
-      const hittedCoinPos = this.checkCollision(x,y);
+      const hittedCoinPos = this.checkCollision(x, y, size);
       if(hittedCoinPos){
         this.removeCoin(hittedCoinPos);
         this.updateScore(player.id);
@@ -115,8 +115,8 @@ class Updater extends React.Component {
       this.props.store.updatePosition(player.id, {x, y}, 1);
     })
   }
-  updateScore(playerIndex=0){
-    this.props.store.scores[playerIndex] = this.props.store.scores[playerIndex] + 1;
+  updateScore = (playerId=0) => {
+    this.props.store.scores[playerId] = this.props.store.scores[playerId] + 1;
   }
   removeCoin(coinPos){
     this.props.store.coins = this.props.store.coins.filter(coin=>!(coin.x===coinPos.x && coin.y===coinPos.y)) 
@@ -152,14 +152,22 @@ class Updater extends React.Component {
     this.props.store.createNewCoins(gameWidth, gameHeight, coinSize);
   }
 
-  checkCollision(x,y){
+  checkCollision(x,y, playerSize){
+
+    const playerX = x + (playerSize/2);
+    const playerY= y + (playerSize/2);
     const coinSize = config.coinSize * this.context.scale;
-    const maxDisToCollide = coinSize/2;
-      return this.props.store.coins.find(coin=>
-        coin.x >= (x - maxDisToCollide ) &&
-        coin.x <= (x + maxDisToCollide) &&
-        coin.y >= (y - maxDisToCollide) &&
-        coin.y <= (y + maxDisToCollide) )
+    const maxDisToCollide = (coinSize/2) + (playerSize/2);
+      return this.props.store.coins.find(coin=> {
+
+      const x1 = coin.x+(coinSize/2);
+      const y1 = coin.y+(coinSize/2);
+      return Boolean(
+        x1 >= (playerX - maxDisToCollide ) &&
+        x1 <= (playerX + maxDisToCollide) &&
+        y1 >= (playerY - maxDisToCollide) &&
+        y1 <= (playerY + maxDisToCollide)
+      )})
   }
   render() {
     return (

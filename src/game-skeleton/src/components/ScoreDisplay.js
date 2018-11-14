@@ -66,7 +66,7 @@ const ScoreDisplay = ({
         </Grid>
         <Grid item>
           {players.map(player => (
-              <Typography variant="body1">
+              <Typography key={player.id} variant="body1">
                 {player.name}: {store.scores[player.id]}
               </Typography>
           ))}

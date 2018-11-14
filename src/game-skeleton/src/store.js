@@ -1,6 +1,6 @@
 import { extendObservable } from 'mobx';
 import config from './config';
-import { NOT_STARTED } from './constants'
+import { NOT_STARTED, GAME_OVER } from './constants'
 
 class passengerStore {
   constructor() {
@@ -10,30 +10,32 @@ class passengerStore {
       prevTime: Date.now(),
       position: position,
       direction: config.defaultDirections,
-      score: [0, 0],
       mode: NOT_STARTED,
       coins: [],
-      scores : config.defaultScore
+      scores : config.defaultScore,
+      winner: {},
+      players:[]
     });
   }
-  updatePosition(playerId, newPosition, offset) {
+  updatePosition(playerId, newPosition) {
     this.position[playerId] = newPosition;
   }
   resetGame() {
+    this.direction = config.defaultDirections;
+    this.scores = config.defaultScore;
     this.position = config.playersStartingPoint;
-    this.direction = config.defaultDirections
+    this.mode = NOT_STARTED;
+
   }
   updateDirection(playerId, newDirection) {
     this.direction[playerId] = newDirection;
   }
-  updateScore(gameId, score) {
-    if (this.score[gameId] !== score) {
-
-      this.score[gameId] = score;
-    }
-  }
   updateMode(mode) {
     this.mode = mode;
+  }
+  endGame () {
+    this.mode = GAME_OVER;
+    this.winner = this.players[this.scores.indexOf(Math.max(...this.scores))];
   }
 
   createNewCoins(gameWidth, gameHeight, coinSize) {
@@ -48,13 +50,13 @@ class passengerStore {
       const numOfNewCoins = config.maxCoins - this.coins.length;
       for (let i = 0; i < numOfNewCoins; i++) {
         const coinPosition = {
-          x: Math.floor(Math.random() * (gameWidth - coinSize) + coinSize),
-          y: Math.floor(Math.random() * (gameHeight - coinSize) + coinSize),
+          x: Math.floor(Math.random() * (gameWidth - coinSize)),
+          y: Math.floor(Math.random() * (gameHeight - coinSize)),
           id: i
         };
         if(isOverlap(coinPosition)){
           i--;
-        }else{
+        } else {
           this.coins.push(coinPosition);
         }
       }

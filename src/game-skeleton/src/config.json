@@ -13,11 +13,11 @@
   "passengerSize": 20,
   "editorMode": "python",
   "playersStartingPoint": [{
-    "x": 50,
+    "x": 0,
     "y": 0
   },
   {
-    "x": 100,
+    "x": 200,
     "y": 0
   },
   {
