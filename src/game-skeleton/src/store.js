@@ -1,6 +1,6 @@
 import { extendObservable } from 'mobx';
 import config from './config';
-import { NOT_STARTED} from './constants'
+import { NOT_STARTED } from './constants'
 
 class passengerStore {
   constructor() {
@@ -12,6 +12,8 @@ class passengerStore {
       direction: config.defaultDirections,
       score: [0, 0],
       mode: NOT_STARTED,
+      coins: [],
+      scores : config.defaultScore
     });
   }
   updatePosition(playerId, newPosition, offset) {
@@ -33,6 +35,32 @@ class passengerStore {
   updateMode(mode) {
     this.mode = mode;
   }
+
+  createNewCoins(gameWidth, gameHeight, coinSize) {
+    const isOverlap = ({x, y})=>{
+      return Boolean(this.coins.find(coin=>
+        coin.x >= (x - coinSize) &&
+        coin.x <= (x + coinSize) &&
+        coin.y >= (y - coinSize) &&
+        coin.y <= (y + coinSize) ))
+    }
+    if (this.coins.length <= config.minCoins) {
+      const numOfNewCoins = config.maxCoins - this.coins.length;
+      for (let i = 0; i < numOfNewCoins; i++) {
+        const coinPosition = {
+          x: Math.floor(Math.random() * (gameWidth - coinSize) + coinSize),
+          y: Math.floor(Math.random() * (gameHeight - coinSize) + coinSize),
+          id: i
+        };
+        if(isOverlap(coinPosition)){
+          i--;
+        }else{
+          this.coins.push(coinPosition);
+        }
+      }
+    }
+  }
+
 }
 
 export default new passengerStore();

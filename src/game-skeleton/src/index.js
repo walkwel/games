@@ -14,12 +14,12 @@ const App = () => {
     singleWindowGame: true,
     players: [{
       id:0,
-      name: 'player 1',
+      name: 'Sarab',
       score: 0,
       character: 'GreenCar'
     }, {
       id: 1,
-      name: 'player 2',
+      name: 'Easy Bot',
       score: 0,
       character: 'WhiteCar'
     }]

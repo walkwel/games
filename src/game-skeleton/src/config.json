@@ -19,8 +19,13 @@
   {
     "x": 100,
     "y": 0
+  },
+  {
+    "x": 200,
+    "y": 0
   }],
   "defaultDirections": ["up", "up"],
+  "defaultScore": [0,0,0],
   "playerKeys": [{
     "up": "w",
     "down": "s",
@@ -34,5 +39,15 @@
     "left": "j",
     "right": "l",
     "switch": "o"
-  }]
+  },
+  {
+    "up": "g",
+    "down": "b",
+    "left": "v",
+    "right": "n",
+    "switch": "o"
+  }],
+  "maxCoins" : 20,
+  "minCoins" : 2,
+  "coinSize" : 50
 }

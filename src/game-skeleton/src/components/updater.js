@@ -30,7 +30,6 @@ class Updater extends React.Component {
       if(this.props.store.time <= 0) {
         this.props.updateGameState(GAME_OVER);
         this.props.store.updateMode(GAME_OVER);
-        console.log('ho gya', this.props.store.mode);
         return;
       }
       // update game time
@@ -38,42 +37,90 @@ class Updater extends React.Component {
         this.props.store.time--;
         this.props.store.prevTime = Date.now();
       }
-      this.updatePosition()
+      this.createNewCoins();
+      this.updatePosition();
     }
+  }
+  playerColliding = (players, id, size, playerX, playerY, direction) => {
+    let collide = false;
+    players.forEach(player => {
+      if(player.id === id)
+        return;
+      const competitor = this.props.store.position[player.id];
+      let x1 = competitor.x - size;
+      let x2 = competitor.x + size;
+      let y1 = competitor.y;
+      let y2 = competitor.y + size;
+      if (direction === 'left' || direction === 'right') {
+        x1 = competitor.x;
+        y1 = competitor.y - size;
+      }
+      if(
+        playerX <= x2 &&
+        playerX >= x1 &&
+        playerY >= y1 &&
+        playerY <= y2
+      ) {
+        collide = true
+      }
+  })
+      return collide;
   }
   // update player position
   updatePosition = () => {
-    const playerSize = (((config.playerSize / 30) * this.context.scale) * 100);
+    const size = Math.floor((((config.playerSize / 30) * this.context.scale) * 100));
     const gameWidth = Math.ceil(config.width * this.context.scale);
     const gameHeight = Math.ceil(config.height * this.context.scale);
-    this.props.gameData.players.forEach( (player) => {
-      let {x, y} = this.props.store.position[player.id];
-      switch (this.props.store.direction[player.id]) {
+    const players = this.props.gameData.players;
+    players.forEach( (player) => {
+      const {id} = player;
+      const positions = this.props.store.position[id];
+      let {x, y} = positions;
+      const direction = this.props.store.direction[id];
+      switch (direction) {
         case 'right' :
-          x += config.speed;
-          if(x+playerSize > gameWidth)
-            x = gameWidth - playerSize
+          if(!this.playerColliding(players, id, size, x+size, y, direction)) {
+            x += config.speed;
+            if(x+size > gameWidth)
+              x = gameWidth - size
+          }
           break;
         case 'down' :
+        if(!this.playerColliding(players, id, size, x, y+size, direction)) {
           y += config.speed;
-          if(y+playerSize > gameHeight)
-            y = gameHeight - playerSize
+          if(y+size > gameHeight)
+            y = gameHeight - size
+        }
           break;
         case 'left' :
+        if(!this.playerColliding(players, id, size, x, y, direction)) {
         x -= config.speed;
           if (x < 0)
             x = 0
+        }
           break;
         default :
+        if(!this.playerColliding(players, id, size, x, y, direction)) {
           y -= config.speed;
           if (y < 0)
             y = 0
+        }
           break;
+      }
+      const hittedCoinPos = this.checkCollision(x,y);
+      if(hittedCoinPos){
+        this.removeCoin(hittedCoinPos);
+        this.updateScore(player.id);
       }
       this.props.store.updatePosition(player.id, {x, y}, 1);
     })
   }
-
+  updateScore(playerIndex=0){
+    this.props.store.scores[playerIndex] = this.props.store.scores[playerIndex] + 1;
+  }
+  removeCoin(coinPos){
+    this.props.store.coins = this.props.store.coins.filter(coin=>!(coin.x===coinPos.x && coin.y===coinPos.y)) 
+  }
   reset = () => {
       this.props.store.mode = NOT_STARTED;
       this.gameTime = this.props.gameData.gameTime || config.time;
@@ -97,6 +144,22 @@ class Updater extends React.Component {
           }
         })
       })
+  }
+  createNewCoins() {
+    const gameWidth = Math.ceil(config.width * this.context.scale);
+    const gameHeight = Math.ceil(config.height * this.context.scale);
+    const coinSize = config.coinSize * this.context.scale;
+    this.props.store.createNewCoins(gameWidth, gameHeight, coinSize);
+  }
+
+  checkCollision(x,y){
+    const coinSize = config.coinSize * this.context.scale;
+    const maxDisToCollide = coinSize/2;
+      return this.props.store.coins.find(coin=>
+        coin.x >= (x - maxDisToCollide ) &&
+        coin.x <= (x + maxDisToCollide) &&
+        coin.y >= (y - maxDisToCollide) &&
+        coin.y <= (y + maxDisToCollide) )
   }
   render() {
     return (
