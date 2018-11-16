@@ -76,7 +76,9 @@ class GameView extends Component {
               winner={this.props.store.winner}
               restartGame={this.endGame}
               submitSolution={this.submitSolution}
-            /> )
+            >
+              {this.props.submitSolution}
+            </WinningScreen> )
           : (
             <Loop>
               <Grid container spacing={16}>

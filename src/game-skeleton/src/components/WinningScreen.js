@@ -6,7 +6,7 @@ import { NOT_STARTED } from '../constants';
 import PropTypes from 'prop-types';
 
 
-const WinningScreen = ({ restartGame, gameOver, winner, submitSolution }) => {
+const WinningScreen = ({ restartGame, gameOver, winner, submitSolution, children }) => {
   return (
     <Fragment>
       {gameOver.status && (
@@ -23,12 +23,7 @@ const WinningScreen = ({ restartGame, gameOver, winner, submitSolution }) => {
             PLAY AGAIN
           </Button>
           <br></br>
-          <Button
-            variant="contained"
-            onClick={() => submitSolution(NOT_STARTED)}
-          >
-            SUBMIT SOLUTION
-          </Button>
+          {typeof children === 'function' && children()}
         </div>
       )}
     </Fragment>

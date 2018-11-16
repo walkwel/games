@@ -4,6 +4,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import React from 'react';
+import TableHead from '@material-ui/core/TableHead';
 
 
 const tableHeading = botFiles =>
@@ -90,7 +91,7 @@ const TableResults = ({ botFiles, config, scoreToWin, handleOpeningGame }) => {
   }];
   return (
     <Table id="game-result-table" border="0" align="center" cellSpacing={0}>
-      <thead>
+      <TableHead>
         <TableRow>
           <TableCell width="5" />
           <TableCell width="5" />
@@ -99,14 +100,14 @@ const TableResults = ({ botFiles, config, scoreToWin, handleOpeningGame }) => {
           <TableCell width="10" className="cell-player-name">Won as Player 2</TableCell>
           <TableCell width="10" className="cell-player-name">Overall Total</TableCell>
         </TableRow>
-      </thead>
+      </TableHead>
       <TableBody>
         <TableRow>
           <TableCell />
-          <TableCell className="cell-player-number" rowSpan={botFiles.length + 1}>
+          <TableCell className="cell-player-number" rowSpan={3 + 1}>
             As Player 1
           </TableCell>
-          <TableCell className="cell-player-number" colSpan={botFiles.length}>
+          <TableCell className="cell-player-number" colSpan={3}>
             As Player 2
           </TableCell>
           <TableCell colSpan={3} />

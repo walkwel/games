@@ -6,7 +6,7 @@ const App = () => {
   const props = {
     playMode: 'manual code',
     levelsToWin: 3,
-    gameTime:  200,
+    gameTime:  10,
     botsQuantities: 1,
     gameType: 'tournament',
     scoreToWin: 20,
