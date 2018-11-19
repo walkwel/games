@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import config from '../config';
 import { PLAY, GAME_OVER, NOT_STARTED } from '../constants';
+import { defaultJavascriptFunctionCode } from '../defaultCode'
 
 class Updater extends React.Component {
   static contextTypes = {
@@ -39,7 +40,26 @@ class Updater extends React.Component {
       }
       this.createNewCoins();
       this.updatePosition();
+      this.updateBotsPositions();
     }
+  }
+  updateBotsPositions = ()=>{
+    if (Math.abs(this.props.store.prevTime - Date.now()) >= 900) {
+    this.props.gameData.players.forEach((player, index) => {
+      if(player.isBot){
+        let playerFunc = ()=>{return 'left'}
+        try{
+            playerFunc = eval(defaultJavascriptFunctionCode);
+        }catch (e) {
+          // console.log(e);
+        }
+        const playerPos = this.props.store.position[index];
+        const coins = this.props.store.coins
+        const direction = playerFunc(playerPos, coins)
+        this.props.store.updateDirection(player.id, direction);
+      }
+    })
+  }
   }
   playerColliding = (players, id, size, playerX, playerY, direction) => {
     let collide = false;
@@ -137,7 +157,7 @@ class Updater extends React.Component {
       if (this.props.store.mode !== PLAY) {
         return
       }
-      this.props.gameData.players.forEach(player => {
+      this.props.gameData.players.filter(p=>!p.isBot).forEach(player => {
         Object.keys(config.playerKeys[player.id]).forEach(item => {
           if (config.playerKeys[player.id][item] === e.key) {
             this.props.store.updateDirection(player.id, item);
