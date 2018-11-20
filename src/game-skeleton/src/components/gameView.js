@@ -66,7 +66,9 @@ class GameView extends Component {
               startGame={this.startGame}
               pauseResumeGame={this.pauseResumeGame}
               players={this.props.gameData.players}
-            />
+            >
+              {this.props.gameNav}
+            </ScoreDisplay>
           </Grid>
           {gameState === NOT_STARTED ? (
             <div>Not Started</div> )

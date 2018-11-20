@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import config from '../config';
 import { PLAY, GAME_OVER, NOT_STARTED } from '../constants';
-import { defaultJavascriptFunctionCode } from '../defaultCode'
 
 class Updater extends React.Component {
   static contextTypes = {
@@ -49,7 +48,7 @@ class Updater extends React.Component {
       if(player.isBot){
         let playerFunc = ()=>{return 'left'}
         try{
-            playerFunc = eval(defaultJavascriptFunctionCode);
+            playerFunc = eval(player.botCode);
         }catch (e) {
           // console.log(e);
         }

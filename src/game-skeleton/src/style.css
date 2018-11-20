@@ -39,3 +39,6 @@ body{margin: 0 20px;}
 .score-dsiplay .pause{
   border-radius: 0px 30px 30px 0px;
 }
+.empty-cells{
+  background:gainsboro;
+}

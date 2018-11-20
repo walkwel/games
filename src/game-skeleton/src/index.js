@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Game } from './game'
+import { easyBot } from './bots/easyBot'
+import { mediumBot } from './bots/mediumBot'
 
 const App = () => {
   const props = {
@@ -14,15 +16,30 @@ const App = () => {
     singleWindowGame: true,
     players: [{
       id:0,
-      name: 'Sarab',
+      name: 'Tony',
       score: 0,
-      character: 'GreenCar'
+      character: 'GreenCar',
     }, {
       id: 1,
-      name: 'Easy Bot',
+      name: 'Evan',
       score: 0,
       character: 'WhiteCar',
-      isBot : true
+      isBot : true,
+      botCode: easyBot,
+    }, {
+      id: 2,
+      name: 'Bunty',
+      score: 0,
+      character: '',
+      isBot : true,
+      botCode: easyBot,
+    }, {
+      id: 3,
+      name: 'Bot Father',
+      score: 0,
+      character: '',
+      isBot : true,
+      botCode: easyBot,
     }]
   }
 

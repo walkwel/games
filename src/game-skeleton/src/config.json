@@ -21,11 +21,15 @@
     "y": 0
   },
   {
-    "x": 200,
+    "x": 400,
+    "y": 0
+  },
+  {
+    "x": 600,
     "y": 0
   }],
-  "defaultDirections": ["up", "up"],
-  "defaultScore": [0,0,0],
+  "defaultDirections": ["up", "up", "up", "up"],
+  "defaultScore": [0,0,0, 0],
   "playerKeys": [{
     "up": "w",
     "down": "s",

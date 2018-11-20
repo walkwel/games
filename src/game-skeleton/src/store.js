@@ -14,7 +14,11 @@ class passengerStore {
       coins: [],
       scores : config.defaultScore,
       winner: {},
-      players:[]
+      players:[],
+      // properties for tournament
+      tournamentMatches: [],
+      currentMatch: {},
+      scoresGrid: []
     });
   }
   updatePosition(playerId, newPosition) {
@@ -35,7 +39,12 @@ class passengerStore {
   }
   endGame () {
     this.mode = GAME_OVER;
-    this.winner = this.players[this.scores.indexOf(Math.max(...this.scores))];
+    this.winner = this.players.find(player => (player.id === this.scores.indexOf(Math.max(...this.scores))));
+    this.currentMatch.winner = this.winner.id;
+    const a = this.tournamentMatches.find(match => match.matchId === this.currentMatch.matchId)
+    a.winner = this.winner.id;
+    a.p1score = a.p1.id === a.winner ? 1 : 0;
+    a.p2score = a.p2.id === a.winner ? 1 : 0;
   }
 
   createNewCoins(gameWidth, gameHeight, coinSize) {
@@ -63,6 +72,42 @@ class passengerStore {
     }
   }
 
+  // generate Tournament Matches
+  generateTournament (players) {
+    const matchObject = {
+      matchId: null,
+      p1: null,
+      p2: null,
+      winner: null,
+      p1score: 0,
+      p2score: 0
+    }
+    const matches = new Array(...Array(players.length*(players.length-1)));
+    let currentPlayer = 0;
+    let player = players[currentPlayer];
+    let match = 0;
+    players.forEach(() => {
+      for(let p of players) {
+        matches[match] = {
+          ...matchObject,
+          matchId: match,
+          p1: player,
+          p2:p,
+        };
+        match++;
+    }
+    player = players[++currentPlayer];
+    });
+    this.tournamentMatches = matches;
+    this.scoresGrid = players.map(player => ({
+      ...player,
+      name: player.name,
+      player1Score: 0,
+      player2Score: 0,
+      total: 0,
+      score: this.tournamentMatches.filter(match => match.p1.id === player.id)
+    }));
+  }
 }
 
 export default new passengerStore();

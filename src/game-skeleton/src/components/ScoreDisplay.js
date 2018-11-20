@@ -12,7 +12,8 @@ const ScoreDisplay = ({
   pauseResumeGame,
   gameState,
   startGame,
-  players }) => (
+  players,
+  children }) => (
   <Grid
     container
     justify="center"
@@ -55,6 +56,7 @@ const ScoreDisplay = ({
             </Button>
           </Fragment>
         }
+        {typeof children === 'function' && children()}
       </Grid>
     </Grid>
     <Grid item xs={4} >

@@ -6,7 +6,7 @@ import { NOT_STARTED } from '../constants';
 import PropTypes from 'prop-types';
 
 
-const WinningScreen = ({ restartGame, gameOver, winner, submitSolution, children }) => {
+const WinningScreen = ({ restartGame, gameOver, winner, children }) => {
   return (
     <Fragment>
       {gameOver.status && (
